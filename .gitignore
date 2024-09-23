@@ -4,6 +4,7 @@ out/
 build/
 **/build
 .gradle/
+gradle/
 .idea/
 Users/
 .run/

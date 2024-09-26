@@ -70,7 +70,7 @@ public class PointService {
 
 		pointHistoryTable.insert(userId, updatePoint.point(), TransactionType.CHARGE, System.currentTimeMillis());
 
-		return point;
+		return updatePoint;
 	}
 
 	/**
@@ -91,6 +91,6 @@ public class PointService {
 		// 포인트 충전 내역 저장
 		pointHistoryTable.insert(userId, updatePoint.point(), TransactionType.USE, System.currentTimeMillis());
 
-		return point;
+		return updatePoint;
 	}
 }

@@ -81,7 +81,6 @@ class PointServiceTest {
 			new PointHistory(2L, userId, 200L, TransactionType.USE, System.currentTimeMillis())
 		);
 
-		// Mocking - 내역이 정상적으로 조회됨
 		when(pointHistoryTable.selectAllByUserId(userId)).thenReturn(histories);
 
 		// when

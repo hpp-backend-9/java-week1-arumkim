@@ -23,7 +23,7 @@ public class PointService {
 	private final PointHistoryTable pointHistoryTable;
 
 	/**
-	 * Point long.
+	 * 유저 포인트 조회.
 	 *
 	 * @param userId the user id
 	 * @return the long
@@ -39,7 +39,7 @@ public class PointService {
 	}
 
 	/**
-	 * Histories list.
+	 * 유저 내역 목록 조회.
 	 *
 	 * @param userId the user id
 	 * @return the list
@@ -60,20 +60,15 @@ public class PointService {
 	 * @return user point
 	 */
 	public UserPoint charge(long userId, long amount) {
-		if (amount <= 0) {
-			throw new IllegalArgumentException("사용 금액은 0보다 커야 합니다.");
-		}
 
 		UserPoint point = userPointTable.selectById(userId);
 		if (ObjectUtils.isEmpty(point)) {
 			throw new NullPointerException("유저 정보가 존재 하지 않습니다.");
 		}
 
-		// 포인트 충전
-		point = userPointTable.insertOrUpdate(userId, point.point() + amount);
+		UserPoint updatePoint = point.charge(amount);
 
-		// 포인트 충전 내역 저장
-		pointHistoryTable.insert(userId, amount, TransactionType.USE, System.currentTimeMillis());
+		pointHistoryTable.insert(userId, updatePoint.point(), TransactionType.CHARGE, System.currentTimeMillis());
 
 		return point;
 	}
@@ -85,24 +80,16 @@ public class PointService {
 	 * @return user point
 	 */
 	public UserPoint usePoint(long userId, long amount) {
-		if (amount <= 0) {
-			throw new IllegalArgumentException("사용 금액은 0보다 커야 합니다.");
-		}
 
 		UserPoint point = userPointTable.selectById(userId);
 		if (ObjectUtils.isEmpty(point)) {
 			throw new NullPointerException("유저 정보가 존재 하지 않습니다.");
 		}
 
-		if (point.point() < amount) {
-			throw new IllegalArgumentException("잔여 포인트가 부족합니다.");
-		}
-
-		// 포인트 차감
-		point = userPointTable.insertOrUpdate(userId, point.point() - amount);
+		UserPoint updatePoint = point.use(amount);
 
 		// 포인트 충전 내역 저장
-		pointHistoryTable.insert(userId, amount, TransactionType.USE, System.currentTimeMillis());
+		pointHistoryTable.insert(userId, updatePoint.point(), TransactionType.USE, System.currentTimeMillis());
 
 		return point;
 	}

@@ -27,9 +27,8 @@ public class PointController {
      * TODO - 특정 유저의 포인트를 조회하는 기능을 작성해주세요.
      */
     @GetMapping("{id}")
-    public UserPoint point(@PathVariable long id) {
-        long points = pointService.getUserPoint(id);
-        return new UserPoint(id, points, 0);
+    public long point(@PathVariable long id) {
+        return pointService.point(id);
     }
 
     /**
@@ -39,7 +38,7 @@ public class PointController {
     public List<PointHistory> history(
             @PathVariable long id
     ) {
-        return List.of();
+        return pointService.histories(id);
     }
 
     /**
@@ -50,7 +49,7 @@ public class PointController {
             @PathVariable long id,
             @RequestBody long amount
     ) {
-        return new UserPoint(0, 0, 0);
+        return pointService.charge(id, amount);
     }
 
     /**
@@ -61,6 +60,7 @@ public class PointController {
             @PathVariable long id,
             @RequestBody long amount
     ) {
-        return new UserPoint(0, 0, 0);
+        return pointService.usePoint(id, amount);
     }
+
 }
